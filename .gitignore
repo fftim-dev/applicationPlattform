@@ -1,0 +1,7 @@
+*.log
+*.tmp
+node_modules/
+.idea/
+.vscode/
+bc/.*
+web/testRest.py

@@ -1,0 +1,19 @@
+@startuml Component
+package "Microsoft Business Central"{
+    component applicationControl
+    component applicationProcessing
+    component applicationValidation
+    component applicationSubmission
+
+    applicationControl --> applicationValidation: steuert
+    applicationControl --> applicationProcessing: steuert
+    applicationControl -r-> applicationSubmission: steuert
+    applicationSubmission --> applicationValidation : Bewerbungen
+    applicationSubmission <-- applicationValidation : Tabellen
+    applicationValidation -left-> applicationProcessing : startet
+}
+
+component ex as "Externe Webanwendungen"
+applicationSubmission --> ex 
+applicationSubmission <-- ex : Interaktion über Web-Services
+@enduml

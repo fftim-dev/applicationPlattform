@@ -1,0 +1,1 @@
+Enum, page, report, and table components were omitted from the public version because they contained university-specific application-processing details that are not relevant to the public portfolio version.

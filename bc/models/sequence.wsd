@@ -1,0 +1,84 @@
+@startuml sequenceWebAppBC
+skinparam SequenceBoxBorderColor white
+autonumber
+actor Bewerber
+
+box #LightBlue
+participant "Application Form" as WebApp 
+end box
+
+box "Business Central Webdienste"
+participant StudyPrograms
+participant ModuleCategories
+participant ITCategories
+participant externalApplication
+end box
+
+Bewerber -> WebApp: Application form öffnen
+
+==Daten aus Microsoft Business Central abrufen==
+
+activate WebApp
+
+WebApp -> StudyPrograms: GET-Request: get_study_programs()
+activate StudyPrograms
+alt Empfang der Studiengänge (Status code: 200)
+    StudyPrograms -> WebApp: Response: Studiengänge (value)
+
+else Fehler beim Empfang der Studiengänge
+    StudyPrograms -> WebApp: Response: Fehler
+    deactivate StudyPrograms
+    WebApp -> Bewerber: "Service is unavaible"
+end
+
+
+WebApp -> ModuleCategories: GET-Request: get_module_categories()
+activate ModuleCategories
+alt Empfang der Modulkategorien (Status code: 200)
+    ModuleCategories -> WebApp: Response: Modulkategorien (value)
+else Fehler beim Empfang der Modulkategorien
+    ModuleCategories -> WebApp: Response: Fehler
+    deactivate ModuleCategories
+    WebApp -> Bewerber: "Service is unavaible"
+end
+
+WebApp -> ITCategories: GET-Request: get_it_categories()
+activate ITCategories
+alt Empfang der IT-Kategorien (Status code: 200)
+    ITCategories -> WebApp: Response: IT-Kategorien (value)
+else Fehler beim Empfang der IT-Kategorien
+    ITCategories -> WebApp: Response: Fehler
+    deactivate ITCategories
+    WebApp -> Bewerber: "Service is unavaible"
+end
+
+==Arbeiten mit dem Bewerbungsformular==
+
+WebApp -> Bewerber: Application Form Rendering
+
+Bewerber -> WebApp: Formular ausfüllen und "Count Modules" klicken
+WebApp -> externalApplication: POST-Request: countModulesFromJson()
+activate externalApplication
+externalApplication -> WebApp: Response: Bewerbungsmöglichkeit (value)
+deactivate externalApplication
+
+alt Bewerbung möglich
+    WebApp -> Bewerber: Flash-Nachricht mit Rückgabewert von countModulesFromJson
+    Bewerber -> WebApp: "Send Application" klicken
+    WebApp -> externalApplication: POST-Request: submitApplication()
+    activate externalApplication
+    externalApplication -> WebApp: Response: Status der Bewerbung (value)
+    deactivate externalApplication
+
+    alt Bewerbung eingereicht
+        WebApp -> Bewerber: Flash-Nachricht mit Rückgabewert von submitApplication
+    else Fehler aufgetreten
+        WebApp -> Bewerber: Flash-Nachricht mit Rückgabewert von submitApplication
+    end
+else Credit Points reichen nicht aus ODER Fehler aufgetreten
+    WebApp -> Bewerber: Flash-Nachricht mit Rückgabewert von countModulesFromJson
+end
+
+Bewerber -> WebApp: Application form schließen
+deactivate WebApp
+@enduml

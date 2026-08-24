@@ -1,0 +1,49 @@
+Table ApplicationExternalData_DIG{
+  ID Integer [pk]
+  FirstName Text[50]
+  LastName Text[50]
+  Email Text[254] 
+  Phone Text[20]
+  BirthDate Date 
+  Nationality Text[50] 
+  EduCountry Text[50] 
+  EduUniversity Text[100] 
+  EduProgramName Text[100] 
+  EduDegree Text[50] 
+  EduFinalGrade Decimal 
+  StudyProgram Code[3] [ref: > StudyProgram_DIG.Code]
+  Status Enum 
+  Comment Text[200]
+}
+
+Table StudyProgram_DIG{
+  Code Code[3] [pk]
+  Name Text[50]
+}
+
+Table ITCategories_DIG{
+  ID Integer [pk]
+  Name Text[50]
+}
+
+Table Module_DIG{
+  ID Integer [pk]
+  Application Integer [ref: > ApplicationExternalData_DIG.ID]
+  Name Text[50]
+  CP Integer
+  Category Text[3] [ref: > ModuleCategories_DIG.Code]
+  IT Integer [ref: > ITCategories_DIG.ID]
+  IT_Name Text[50]
+}
+
+Table ModuleCategories_DIG{
+  Code Code[3] [pk]
+  Name Text[50]
+}
+
+Table RequirementsforPrograms_DIG{
+  Program Code[3] [pk, ref: < StudyProgram_DIG.Code]
+  Category Code[3] [pk, ref: < ModuleCategories_DIG.Code]
+  CP Integer
+}
+
