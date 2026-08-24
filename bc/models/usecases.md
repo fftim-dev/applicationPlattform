@@ -1,1 +1,1 @@
-Use Cases diagrams removed due to public version
+The original use cases contained university-specific process details and were therefore omitted from the public version.
