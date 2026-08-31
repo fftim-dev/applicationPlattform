@@ -1,4 +1,4 @@
-# Application Plattform
+# University Application Platform
 
 This project was developed as part of a Bachelor's thesis. It is an academic working prototype of a platform for handling applications to a Master's programme, based on a real-world university application process. The implementation represents the prototype developed for the thesis.
 
